@@ -9,7 +9,12 @@ namespace DBSecProject
     public class SecurityLevel
     {
         public int Class { get; set; }
-        
+        public SecurityCategory Category { get; set; }
+        public SecurityLevel(int @class, string category)
+        {
+            Class = @class;
+            Category = new SecurityCategory(category);
+        }
     }
 
     public class SecurityCategory

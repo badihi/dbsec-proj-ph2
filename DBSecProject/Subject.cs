@@ -10,5 +10,9 @@ namespace DBSecProject
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        public SecurityLevel RSL { get; set; }
+        public SecurityLevel WSL { get; set; }
+        public SecurityLevel RIL { get; set; }
+        public SecurityLevel WIL { get; set; }
     }
 }

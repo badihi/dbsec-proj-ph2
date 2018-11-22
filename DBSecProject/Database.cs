@@ -55,7 +55,11 @@ namespace DBSecProject
                 Subject = new Subject
                 {
                     Username = reader.GetString(1),
-                    Password = reader.GetString(2)
+                    Password = reader.GetString(2),
+                    RSL = new SecurityLevel(reader.GetInt32(3), reader.GetString(4)),
+                    WSL = new SecurityLevel(reader.GetInt32(5), reader.GetString(6)),
+                    RIL = new SecurityLevel(reader.GetInt32(7), reader.GetString(8)),
+                    WIL = new SecurityLevel(reader.GetInt32(9), reader.GetString(10)),
                 };
             }
         }
