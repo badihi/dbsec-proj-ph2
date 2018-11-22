@@ -13,31 +13,40 @@ namespace DBSecProject
 {
     public partial class Form1 : Form
     {
+        private Database Database { get; set; }
         public Form1()
         {
             InitializeComponent();
+            var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AppDatabaseConnectionString"].ConnectionString;
+            Database = new Database(connectionString);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            using (var conn = new NpgsqlConnection(connString))
+            try
             {
-                conn.Open();
+                Database.Connect();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error connecting to the database: " + ex.Message);
+            }
+        }
 
-                // Insert some data
-                using (var cmd = new NpgsqlCommand())
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            var loginForm = new LoginForm(Database);
+
+            while (!Database.IsAuthenticated())
+            {
+                try
                 {
-                    cmd.Connection = conn;
-                    cmd.CommandText = "INSERT INTO data (some_field) VALUES (@p)";
-                    cmd.Parameters.AddWithValue("p", "Hello world");
-                    cmd.ExecuteNonQuery();
+                    var result = loginForm.ShowDialog();
                 }
-
-                // Retrieve all rows
-                using (var cmd = new NpgsqlCommand("SELECT some_field FROM data", conn))
-                using (var reader = cmd.ExecuteReader())
-                    while (reader.Read())
-                        Console.WriteLine(reader.GetString(0));
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }
