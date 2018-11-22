@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblLoggedInAs = new System.Windows.Forms.Label();
             this.btnChangeUser = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnExecute = new System.Windows.Forms.Button();
@@ -41,15 +41,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // lblLoggedInAs
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 21);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Logged In As: ";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.lblLoggedInAs.AutoSize = true;
+            this.lblLoggedInAs.Location = new System.Drawing.Point(12, 21);
+            this.lblLoggedInAs.Name = "lblLoggedInAs";
+            this.lblLoggedInAs.Size = new System.Drawing.Size(98, 17);
+            this.lblLoggedInAs.TabIndex = 0;
+            this.lblLoggedInAs.Text = "Logged in as: ";
+            this.lblLoggedInAs.Click += new System.EventHandler(this.label1_Click);
             // 
             // btnChangeUser
             // 
@@ -59,6 +59,7 @@
             this.btnChangeUser.TabIndex = 1;
             this.btnChangeUser.Text = "Change User";
             this.btnChangeUser.UseVisualStyleBackColor = true;
+            this.btnChangeUser.Click += new System.EventHandler(this.btnChangeUser_Click);
             // 
             // textBox1
             // 
@@ -135,7 +136,7 @@
             this.Controls.Add(this.btnExecute);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnChangeUser);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblLoggedInAs);
             this.Name = "Form1";
             this.Text = "Secure Database";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -150,7 +151,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblLoggedInAs;
         private System.Windows.Forms.Button btnChangeUser;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button btnExecute;

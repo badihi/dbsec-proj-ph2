@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DBSecProject
 {
-    class Subject
+    public class Subject
     {
         public string Username { get; set; }
         public string Password { get; set; }

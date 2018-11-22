@@ -35,9 +35,14 @@ namespace DBSecProject
 
         private void Form1_Shown(object sender, EventArgs e)
         {
+            DoLogin();
+        }
+
+        private void DoLogin()
+        {
             var loginForm = new LoginForm(Database);
 
-            while (!Database.IsAuthenticated())
+            do
             {
                 try
                 {
@@ -47,12 +52,19 @@ namespace DBSecProject
                 {
                     MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
+            } while (!Database.IsAuthenticated());
+
+            lblLoggedInAs.Text = "Logged in as: " + Database.Subject.Username;
         }
 
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnChangeUser_Click(object sender, EventArgs e)
+        {
+            DoLogin();
         }
     }
 }

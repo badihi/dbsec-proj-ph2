@@ -19,7 +19,7 @@ namespace DBSecProject
 
     public class SecurityCategory
     {
-        public List<List<string>> Sets { get; set; }
+        public List<List<string>> Sets { get; set; } = new List<List<string>>();
         public SecurityCategory(string categorySets)
         {
             foreach (var categorySet in categorySets.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
@@ -31,6 +31,9 @@ namespace DBSecProject
                 }
                 Sets.Add(newSet);
             }
+
+            if (Sets.Count == 0)
+                Sets = new List<List<string>> { new List<string> { "" } };
         }
 
         public bool Contains(SecurityCategory otherCategory)

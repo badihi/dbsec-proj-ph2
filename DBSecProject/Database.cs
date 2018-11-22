@@ -10,7 +10,7 @@ namespace DBSecProject
     public class Database
     {
         private NpgsqlConnection connection;
-        private Subject Subject { get; set; } = null;
+        public Subject Subject { get; private set; } = null;
         public Database(string connectionString)
         {
             connection = new NpgsqlConnection(connectionString);
