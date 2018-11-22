@@ -56,7 +56,7 @@
             this.btnChangeUser.Location = new System.Drawing.Point(191, 16);
             this.btnChangeUser.Name = "btnChangeUser";
             this.btnChangeUser.Size = new System.Drawing.Size(139, 30);
-            this.btnChangeUser.TabIndex = 1;
+            this.btnChangeUser.TabIndex = 3;
             this.btnChangeUser.Text = "Change User";
             this.btnChangeUser.UseVisualStyleBackColor = true;
             this.btnChangeUser.Click += new System.EventHandler(this.btnChangeUser_Click);
@@ -77,7 +77,7 @@
             this.btnExecute.Location = new System.Drawing.Point(726, 58);
             this.btnExecute.Name = "btnExecute";
             this.btnExecute.Size = new System.Drawing.Size(75, 63);
-            this.btnExecute.TabIndex = 3;
+            this.btnExecute.TabIndex = 1;
             this.btnExecute.Text = "Execute";
             this.btnExecute.UseVisualStyleBackColor = true;
             // 
@@ -129,6 +129,7 @@
             // 
             // Form1
             // 
+            this.AcceptButton = this.btnExecute;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(813, 625);
