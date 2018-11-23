@@ -54,6 +54,7 @@ namespace DBSecProject
 
                 Subject = new Subject
                 {
+                    Id = reader.GetInt32(0),
                     Username = reader.GetString(1),
                     Password = reader.GetString(2),
                     RSL = new SecurityLevel(reader.GetInt32(3), reader.GetString(4)),
@@ -62,6 +63,27 @@ namespace DBSecProject
                     WIL = new SecurityLevel(reader.GetInt32(9), reader.GetString(10)),
                 };
             }
+        }
+
+        public QueryResult ExecuteQuery(string queryString)
+        {
+            Query query;
+
+            try
+            {
+                query = Query.Parse(queryString);
+            }
+            catch (Exception ex)
+            {
+                return new QueryResult
+                {
+                    Error = ex.Message,
+                    Status = "An error occured",
+                    Type = QueryResultType.Text
+                };
+            }
+
+            return query.Execute(connection, Subject.RSL, Subject.WSL, Subject.RIL, Subject.WIL, Subject.Id);
         }
 
         public bool IsAuthenticated()

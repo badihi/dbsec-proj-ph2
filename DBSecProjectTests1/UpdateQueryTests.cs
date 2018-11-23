@@ -20,5 +20,13 @@ namespace DBSecProject.Tests
             Assert.AreEqual(query.Conditions, "id=1 and s=2.00");
             Assert.AreEqual(query.Sets.Count, 3);
         }
+
+        [TestMethod()]
+        public void ExecuteTest()
+        {
+            var conn = DatabaseProvider.GetConnection();
+            var query = new UpdateQuery("update nurses set salary = 200000 where personnel_no = 211");
+            query._Execute(conn, new SecurityLevel(3, "*"), new SecurityLevel(0, "f|s312"));
+        }
     }
 }

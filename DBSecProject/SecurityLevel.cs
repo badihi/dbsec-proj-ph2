@@ -15,6 +15,16 @@ namespace DBSecProject
             Class = @class;
             Category = new SecurityCategory(category);
         }
+
+        public static bool operator >=(SecurityLevel a, SecurityLevel b)
+        {
+            return a.Class <= b.Class && a.Category.Contains(b.Category);
+        }
+
+        public static bool operator <=(SecurityLevel a, SecurityLevel b)
+        {
+            return a.Class >= b.Class && b.Category.Contains(a.Category);
+        }
     }
 
     public class SecurityCategory
@@ -31,28 +41,15 @@ namespace DBSecProject
                 }
                 Sets.Add(newSet);
             }
-
-            if (Sets.Count == 0)
-                Sets = new List<List<string>> { new List<string> { "" } };
         }
 
         public bool Contains(SecurityCategory otherCategory)
         {
-            bool isSubset = false;
-            bool isSuperset = false;
-
-            foreach (var set in Sets)
-            {
-                foreach (var otherSet in otherCategory.Sets)
-                {
-                    if (set.All(member => otherSet.Contains(member)))
-                        isSubset = true;
-                    if (otherSet.All(member => set.Contains(member)))
-                        isSuperset = true;
-                }
-            }
-
-            return isSubset && !isSuperset;
+            if (Sets.Count == 0)
+                return true;
+            if (otherCategory.Sets.Any(set => set.Any(subset => subset == "*")))
+                return true;
+            return otherCategory.Sets.All(otherSet => Sets.Any(set => set.All(member => otherSet.Contains(member))));
         }
     }
 }

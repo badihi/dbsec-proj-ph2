@@ -19,5 +19,13 @@ namespace DBSecProject.Tests
             Assert.AreEqual(query.TableName, "table");
             Assert.AreEqual(query.Conditions, "a=1 and b=2");
         }
+
+        [TestMethod()]
+        public void ExecuteTest()
+        {
+            var conn = DatabaseProvider.GetConnection();
+            var query = new DeleteQuery("delete from patients where fname='Folan'");
+            query._Execute(conn, new SecurityLevel(3, "*"), new SecurityLevel(2, "d111"));
+        }
     }
 }

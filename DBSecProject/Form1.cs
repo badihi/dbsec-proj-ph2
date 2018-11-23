@@ -66,5 +66,27 @@ namespace DBSecProject
         {
             DoLogin();
         }
+
+        private void btnExecute_Click(object sender, EventArgs e)
+        {
+            var result = Database.ExecuteQuery(txQuery.Text);
+            if (result.Error != null)
+            {
+                txResults.Text = "An error has occured:\n" + result.Error;
+                tab.SelectedIndex = 1;
+            }
+            else
+                switch (result.Type)
+                {
+                    case QueryResultType.Data:
+                        grid.DataSource = result.DataTable;
+                        tab.SelectedIndex = 0;
+                        break;
+                    case QueryResultType.Text:
+                        txResults.Text = result.Status;
+                        tab.SelectedIndex = 1;
+                        break;
+                }
+        }
     }
 }
