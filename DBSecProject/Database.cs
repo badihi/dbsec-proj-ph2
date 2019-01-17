@@ -42,27 +42,25 @@ namespace DBSecProject
 
         public void Login(string username, string password)
         {
-            var cmd = new NpgsqlCommand("SELECT * FROM subjects WHERE username = @username AND password = @password", connection);
-            cmd.Parameters.AddWithValue("username", username);
-            cmd.Parameters.AddWithValue("password", password);
-            using (var reader = cmd.ExecuteReader())
-            {
-                if (!reader.Read())
-                {
-                    throw new Exception("Username or password is not correct");
-                }
+            var encryptedDb = new EncryptedDB(connection);
+            var rows = encryptedDb.Select("subjects", new List<string> { "*" }, string.Format("username = '{0}' AND password = '{1}'", username, password));
 
-                Subject = new Subject
-                {
-                    Id = reader.GetInt32(0),
-                    Username = reader.GetString(1),
-                    Password = reader.GetString(2),
-                    RSL = new SecurityLevel(reader.GetInt32(3), reader.GetString(4)),
-                    WSL = new SecurityLevel(reader.GetInt32(5), reader.GetString(6)),
-                    RIL = new SecurityLevel(reader.GetInt32(7), reader.GetString(8)),
-                    WIL = new SecurityLevel(reader.GetInt32(9), reader.GetString(10)),
-                };
+            if (!rows.Any())
+            {
+                throw new Exception("Username or password is not correct");
             }
+
+            var subject = rows[0];
+            Subject = new Subject
+            {
+                Id = Convert.ToInt32(subject["subject_id"]),
+                Username = subject["username"],
+                Password = subject["password"],
+                RSL = new SecurityLevel(Convert.ToInt32(subject["rsl_class"]), subject["rsl_cat"]),
+                WSL = new SecurityLevel(Convert.ToInt32(subject["wsl_class"]), subject["wsl_cat"]),
+                RIL = new SecurityLevel(Convert.ToInt32(subject["ril_class"]), subject["ril_cat"]),
+                WIL = new SecurityLevel(Convert.ToInt32(subject["wil_class"]), subject["wil_cat"]),
+            };
         }
 
         public QueryResult ExecuteQuery(string queryString)

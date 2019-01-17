@@ -32,18 +32,22 @@ namespace DBSecProject
     public abstract class ReadQuery : Query
     {
         public abstract DataTable _Execute(NpgsqlConnection connection, SecurityLevel RSL, SecurityLevel RIL, int subjectId);
-        protected DataTable Read(NpgsqlDataReader reader, SecurityLevel RSL, SecurityLevel RIL)
+        protected DataTable Read(List<Dictionary<string, string>> records, SecurityLevel RSL, SecurityLevel RIL)
         {
             var result = new DataTable();
             result.Clear();
-            for (var i = 0; i < reader.FieldCount; i++)
+
+            if (records.Count == 0)
+                return result;
+
+            foreach (var field in records[0])
             {
-                var name = reader.GetName(i);
+                var name = field.Key;
                 if (!name.EndsWith("_asl_class") && !name.EndsWith("_ail_class") && !name.EndsWith("_asl_cat") && !name.EndsWith("_ail_cat"))
                     result.Columns.Add(name);
             }
 
-            while (reader.Read())
+            foreach (var record in records)
             {
                 var aslClasses = new Dictionary<string, int>();
                 var aslCategories = new Dictionary<string, string>();
@@ -51,40 +55,20 @@ namespace DBSecProject
                 var ailCategories = new Dictionary<string, string>();
                 var values = new Dictionary<string, string>();
 
-                for (var i = 0; i < reader.FieldCount; i++)
+                foreach (var field in record)
                 {
-                    var name = reader.GetName(i);
+                    var name = field.Key;
                     if (name.EndsWith("_asl_class"))
-                        aslClasses.Add(name.Substring(0, name.Length - 10), reader.GetInt32(i));
+                        aslClasses.Add(name.Substring(0, name.Length - 10), Convert.ToInt32(field.Value));
                     else if (name.EndsWith("_ail_class"))
-                        ailClasses.Add(name.Substring(0, name.Length - 10), reader.GetInt32(i));
+                        ailClasses.Add(name.Substring(0, name.Length - 10), Convert.ToInt32(field.Value));
                     else if (name.EndsWith("_asl_cat"))
-                        aslCategories.Add(name.Substring(0, name.Length - 8), reader.GetString(i));
+                        aslCategories.Add(name.Substring(0, name.Length - 8), field.Value);
                     else if (name.EndsWith("_ail_cat"))
-                        ailCategories.Add(name.Substring(0, name.Length - 8), reader.GetString(i));
+                        ailCategories.Add(name.Substring(0, name.Length - 8), field.Value);
                     else
                     {
-                        string value = "";
-                        if (reader.IsDBNull(i))
-                            value = null;
-                        else
-                            switch (reader.GetDataTypeName(i))
-                            {
-                                case "integer":
-                                    value = reader.GetInt32(i).ToString();
-                                    break;
-                                case "boolean":
-                                    value = reader.GetBoolean(i).ToString();
-                                    break;
-                                case "character varying":
-                                case "character(10)":
-                                    value = reader.GetString(i);
-                                    break;
-                                case "date":
-                                    value = reader.GetDate(i).ToString();
-                                    break;
-                            }
-                        values.Add(name, value);
+                        values.Add(name, field.Value);
                     }
                 }
 

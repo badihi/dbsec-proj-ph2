@@ -21,57 +21,42 @@ namespace DBSecProject
 
         public override DataTable _Execute(NpgsqlConnection connection, SecurityLevel RSL, SecurityLevel RIL, int subjectId)
         {
-            var cmd = new NpgsqlCommand("SELECT * FROM doctors WHERE subject_id = @subjectid", connection);
-            cmd.Parameters.AddWithValue("subjectid", subjectId);
-            using (var reader = cmd.ExecuteReader())
+            var encyptedDb = new EncryptedDB(connection);
+            var rows = encyptedDb.Select("doctors", new List<string> { "*" }, "subject_id = " + subjectId);
+            try
             {
-                try
-                {
-                    var result = Read(reader, RSL, RIL);
-                    if (result.Rows.Count > 0)
-                        return result;
-                }
-                catch { }
+                var result = Read(rows, RSL, RIL);
+                if (result.Rows.Count > 0)
+                    return result;
             }
+            catch { }
 
-            cmd = new NpgsqlCommand("SELECT * FROM nurses WHERE subject_id = @subjectid", connection);
-            cmd.Parameters.AddWithValue("subjectid", subjectId);
-            using (var reader = cmd.ExecuteReader())
+            rows = encyptedDb.Select("nurses", new List<string> { "*" }, "subject_id = " + subjectId);
+            try
             {
-                try
-                {
-                    var result = Read(reader, RSL, RIL);
-                    if (result.Rows.Count > 0)
-                        return result;
-                }
-                catch { }
+                var result = Read(rows, RSL, RIL);
+                if (result.Rows.Count > 0)
+                    return result;
             }
+            catch { }
 
-            cmd = new NpgsqlCommand("SELECT * FROM staff WHERE subject_id = @subjectid", connection);
-            cmd.Parameters.AddWithValue("subjectid", subjectId);
-            using (var reader = cmd.ExecuteReader())
+            rows = encyptedDb.Select("staff", new List<string> { "*" }, "subject_id = " + subjectId);
+            try
             {
-                try
-                {
-                    var result = Read(reader, RSL, RIL);
-                    if (result.Rows.Count > 0)
-                        return result;
-                }
-                catch { }
+                var result = Read(rows, RSL, RIL);
+                if (result.Rows.Count > 0)
+                    return result;
             }
+            catch { }
 
-            cmd = new NpgsqlCommand("SELECT * FROM patients WHERE subject_id = @subjectid", connection);
-            cmd.Parameters.AddWithValue("subjectid", subjectId);
-            using (var reader = cmd.ExecuteReader())
+            rows = encyptedDb.Select("patients", new List<string> { "*" }, "subject_id = " + subjectId);
+            try
             {
-                try
-                {
-                    var result = Read(reader, RSL, RIL);
-                    if (result.Rows.Count > 0)
-                        return result;
-                }
-                catch { }
-                }
+                var result = Read(rows, RSL, RIL);
+                if (result.Rows.Count > 0)
+                    return result;
+            }
+            catch { }
 
             throw new Exception("No related information found respect to the subject.");
         }

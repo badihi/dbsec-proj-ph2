@@ -130,7 +130,7 @@ namespace DBSecProject
             // Equality
             var newNewCondition = "";
             lastIndex = 0;
-            foreach (Match match in Regex.Matches(newCondition, @"([a-zA-Z_]+|'.*'|\d+(?:\.\d+)?)\s*=\s*([a-zA-Z_]+|'.*'|\d+(?:\.\d+)?)"))
+            foreach (Match match in Regex.Matches(newCondition, @"([a-zA-Z_]+|'.*?'|\d+(?:\.\d+)?)\s*=\s*([a-zA-Z_]+|'.*?'|\d+(?:\.\d+)?)"))
             {
                 newNewCondition += newCondition.Substring(lastIndex, match.Index - lastIndex);
                 bool isValue1Field = !float.TryParse(match.Groups[1].Value, out _) && (!match.Groups[1].Value.StartsWith("'") || !match.Groups[1].Value.EndsWith("'"));
@@ -176,7 +176,7 @@ namespace DBSecProject
             }
             newNewCondition += newCondition.Substring(lastIndex);
 
-            var query = "SELECT id, data_enc, data_hash FROM " + tableName + " WHERE " + newNewCondition;
+            var query = "SELECT id, data_enc, data_hash FROM " + tableName + " WHERE " + (string.IsNullOrWhiteSpace(newNewCondition) ? "1=1" : newNewCondition);
             var cmd = new NpgsqlCommand(query, Connection);
             using (var reader = cmd.ExecuteReader())
             {
@@ -195,7 +195,7 @@ namespace DBSecProject
 
                     var evalCondition = "";
                     lastIndex = 0;
-                    foreach (Match match in Regex.Matches(condition, @"([a-zA-Z_]+|'.*'|\d+(?:\.\d+)?)\s*(=|<=|>=|>|<)\s*([a-zA-Z_]+|'.*'|\d+(?:\.\d+)?)"))
+                    foreach (Match match in Regex.Matches(condition, @"([a-zA-Z_]+|'.*?'|\d+(?:\.\d+)?)\s*(=|<=|>=|>|<)\s*([a-zA-Z_]+|'.*?'|\d+(?:\.\d+)?)"))
                     {
                         evalCondition += condition.Substring(lastIndex, match.Index - lastIndex);
 
@@ -408,6 +408,9 @@ namespace DBSecProject
 
         public static bool EvaluateLogicalExpression(string logicalExpression)
         {
+            if (string.IsNullOrWhiteSpace(logicalExpression))
+                return true;
+
             System.Data.DataTable table = new System.Data.DataTable();
             table.Columns.Add("", typeof(bool));
             table.Columns[0].Expression = logicalExpression;
