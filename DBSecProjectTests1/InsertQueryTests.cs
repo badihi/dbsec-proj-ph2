@@ -25,10 +25,10 @@ namespace DBSecProject.Tests
         {
             var conn = DatabaseProvider.GetConnection();
             var query = new InsertQuery("insert   into  patients  (application_no, fname, lname, national_code, age, male, disease, section, medications, doctor_personnel_no, nurse_personnel_no) values  (87654, 'Folan', 'Folani', '2345678975', 40, 'true', 'Cancer', 'Cancer', 'None', 111, 211)");
-            //query.Execute(conn, new SecurityLevel(3, "*"), new SecurityLevel(2, "d111"));
+            query._Execute(conn, new SecurityLevel(3, "*"), new SecurityLevel(2, "d111"));
 
             query = new InsertQuery("insert   into  doctors  (personnel_no, fname, lname, national_code, salary) values  (873654, 'Folan', 'Folani', '2345678975', 100000)");
-            query._Execute(conn, new SecurityLevel(3, "*"), new SecurityLevel(0, "f|s312"));
+            //query._Execute(conn, new SecurityLevel(3, "*"), new SecurityLevel(0, "f|s312"));
         }
     }
 }
