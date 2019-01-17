@@ -673,10 +673,7 @@ namespace DBSecProject.Tests
             var connection = DatabaseProvider.GetConnection();
             var db = new EncryptedDB(connection);
 
-            var result = db.Select("doctors", new List<string>
-            {
-                "*"
-            }, "national_code='1271877775'");
+            var result = db.Select("doctors", "national_code='1271877775'");
         }
 
         [TestMethod()]

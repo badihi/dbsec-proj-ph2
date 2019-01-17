@@ -34,28 +34,27 @@ namespace DBSecProject
 
         public override void _Execute(NpgsqlConnection connection, SecurityLevel WSL, SecurityLevel WIL)
         {
-            var cmd = new NpgsqlCommand("SELECT * FROM schema_default_security WHERE table_name = @table", connection);
-            cmd.Parameters.AddWithValue("table", TableName);
+            var encryptedDb = new EncryptedDB(connection);
+            var selectedSecurity = encryptedDb.Select("schema_default_security", "table_name = '" + TableName + "'");
 
-            var fieldNames = new StringBuilder();
-            var fieldValues = new StringBuilder();
+            var fieldValues = new Dictionary<string, string>();
 
             var asls = new Dictionary<string, SecurityLevel>();
             var ails = new Dictionary<string, SecurityLevel>();
-            using (var reader = cmd.ExecuteReader())
-                while (reader.Read())
-                {
-                    var aslCat = ReplaceVariables(reader.GetString(3));
-                    var ailCat = ReplaceVariables(reader.GetString(5));
-                    var asl = new SecurityLevel(reader.GetInt32(2), aslCat);
-                    var ail = new SecurityLevel(reader.GetInt32(4), ailCat);
+            foreach (var security in selectedSecurity)
+            {
+                var aslCat = ReplaceVariables(security["asl_cat"]);
+                var ailCat = ReplaceVariables(security["ail_cat"]);
+                var asl = new SecurityLevel(Convert.ToInt32(security["asl_class"]), aslCat);
+                var ail = new SecurityLevel(Convert.ToInt32(security["ail_class"]), ailCat);
 
-                    asls.Add(reader.GetString(1), asl);
-                    ails.Add(reader.GetString(1), ail);
-                    fieldNames.AppendFormat("{0}_asl_class, {0}_asl_cat, {0}_ail_class, {0}_ail_cat,", reader.GetString(1));
-                    fieldValues.AppendFormat("{0}, '{1}', {2}, '{3}',", reader.GetInt32(2), aslCat, reader.GetInt32(4), ailCat);
-                }
-
+                asls.Add(security["column_name"], asl);
+                ails.Add(security["column_name"], ail);
+                fieldValues.Add(security["column_name"] + "_asl_class", security["asl_class"]);
+                fieldValues.Add(security["column_name"] + "_asl_cat", aslCat);
+                fieldValues.Add(security["column_name"] + "_ail_class", security["ail_class"]);
+                fieldValues.Add(security["column_name"] + "_ail_cat", ailCat);
+            }
             
             // Checking write permission
             var fieldsToInsert = new Dictionary<string, string>();
@@ -73,8 +72,11 @@ namespace DBSecProject
                 if (WSL <= asl && WIL >= ail)
                 {
                     // Granted
-                    fieldNames.AppendFormat("{0},", field.Key);
-                    fieldValues.AppendFormat("{0},", field.Value);
+                    var value = field.Value;
+                    if (field.Value.StartsWith("'") && field.Value.EndsWith("'"))
+                        value = field.Value.Substring(1, field.Value.Length - 2);
+
+                    fieldValues.Add(field.Key, value);
                 }
                 else
                 {
@@ -83,15 +85,7 @@ namespace DBSecProject
                 }
             }
 
-            fieldNames.Remove(fieldNames.Length - 1, 1);
-            fieldValues.Remove(fieldValues.Length - 1, 1);
-
-            using (var insertCmd = new NpgsqlCommand())
-            {
-                insertCmd.Connection = connection;
-                insertCmd.CommandText = string.Format("INSERT INTO {0} ({1}) VALUES ({2})", TableName, fieldNames.ToString(), fieldValues.ToString());
-                insertCmd.ExecuteNonQuery();
-            }
+            encryptedDb.InsertInto(TableName, fieldValues);
         }
 
         private string ReplaceVariables(string input)

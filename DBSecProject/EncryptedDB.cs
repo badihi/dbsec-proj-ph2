@@ -52,6 +52,11 @@ namespace DBSecProject
             }
         }
 
+        public List<Dictionary<string, string>> Select(string tableName, string condition)
+        {
+            return Select(tableName, new List<string> { "*" }, condition);
+        }
+
         public List<Dictionary<string, string>> Select(string tableName, List<string> fields, string condition)
         {
             var ret = new List<Dictionary<string, string>>();
@@ -329,7 +334,7 @@ namespace DBSecProject
 
         public void UpdateSet(string tableName, Dictionary<string, string> fieldValues, string condition)
         {
-            var selectedRows = Select(tableName, new List<string> { "*" }, condition);
+            var selectedRows = Select(tableName, condition);
             foreach (var row in selectedRows)
             {
                 foreach (var fieldValue in fieldValues)
@@ -371,7 +376,7 @@ namespace DBSecProject
 
         public void DeleteFrom(string tableName, string condition)
         {
-            var selectedRows = Select(tableName, new List<string> { "*" }, condition);
+            var selectedRows = Select(tableName, condition);
             using (var deleteCmd = new NpgsqlCommand())
             {
                 deleteCmd.Connection = Connection;

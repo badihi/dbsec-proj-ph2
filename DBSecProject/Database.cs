@@ -43,7 +43,7 @@ namespace DBSecProject
         public void Login(string username, string password)
         {
             var encryptedDb = new EncryptedDB(connection);
-            var rows = encryptedDb.Select("subjects", new List<string> { "*" }, string.Format("username = '{0}' AND password = '{1}'", username, password));
+            var rows = encryptedDb.Select("subjects", string.Format("username = '{0}' AND password = '{1}'", username, password));
 
             if (!rows.Any())
             {

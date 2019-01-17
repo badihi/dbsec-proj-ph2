@@ -22,7 +22,7 @@ namespace DBSecProject
         public override DataTable _Execute(NpgsqlConnection connection, SecurityLevel RSL, SecurityLevel RIL, int subjectId)
         {
             var encyptedDb = new EncryptedDB(connection);
-            var rows = encyptedDb.Select("doctors", new List<string> { "*" }, "subject_id = " + subjectId);
+            var rows = encyptedDb.Select("doctors", "subject_id = " + subjectId);
             try
             {
                 var result = Read(rows, RSL, RIL);
@@ -31,7 +31,7 @@ namespace DBSecProject
             }
             catch { }
 
-            rows = encyptedDb.Select("nurses", new List<string> { "*" }, "subject_id = " + subjectId);
+            rows = encyptedDb.Select("nurses", "subject_id = " + subjectId);
             try
             {
                 var result = Read(rows, RSL, RIL);
@@ -40,7 +40,7 @@ namespace DBSecProject
             }
             catch { }
 
-            rows = encyptedDb.Select("staff", new List<string> { "*" }, "subject_id = " + subjectId);
+            rows = encyptedDb.Select("staff", "subject_id = " + subjectId);
             try
             {
                 var result = Read(rows, RSL, RIL);
@@ -49,7 +49,7 @@ namespace DBSecProject
             }
             catch { }
 
-            rows = encyptedDb.Select("patients", new List<string> { "*" }, "subject_id = " + subjectId);
+            rows = encyptedDb.Select("patients", "subject_id = " + subjectId);
             try
             {
                 var result = Read(rows, RSL, RIL);
