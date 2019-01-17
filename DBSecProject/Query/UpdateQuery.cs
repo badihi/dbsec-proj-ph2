@@ -32,30 +32,32 @@ namespace DBSecProject
 
         public override void _Execute(NpgsqlConnection connection, SecurityLevel WSL, SecurityLevel WIL)
         {
-            var cmd = new NpgsqlCommand("SELECT * FROM " + TableName + " WHERE " + Conditions, connection);
+            var encryptedDb = new EncryptedDB(connection);
+            var selected = encryptedDb.Select(TableName, Conditions);
+
             var aslClasses = new Dictionary<string, int>();
             var aslCategories = new Dictionary<string, string>();
             var ailClasses = new Dictionary<string, int>();
             var ailCategories = new Dictionary<string, string>();
 
-            using (var reader = cmd.ExecuteReader())
-                while (reader.Read())
+            foreach (var record in selected)
+            {
+                foreach (var field in record)
                 {
-                    for (var i = 0; i < reader.FieldCount; i++)
-                    {
-                        var name = reader.GetName(i);
-                        if (name.EndsWith("_asl_class"))
-                            aslClasses.Add(name.Substring(0, name.Length - 10), reader.GetInt32(i));
-                        else if (name.EndsWith("_ail_class"))
-                            ailClasses.Add(name.Substring(0, name.Length - 10), reader.GetInt32(i));
-                        else if (name.EndsWith("_asl_cat"))
-                            aslCategories.Add(name.Substring(0, name.Length - 8), reader.GetString(i));
-                        else if (name.EndsWith("_ail_cat"))
-                            ailCategories.Add(name.Substring(0, name.Length - 8), reader.GetString(i));
-                    }
+                    var name = field.Key;
+                    if (name.EndsWith("_asl_class"))
+                        aslClasses.Add(name.Substring(0, name.Length - 10), Convert.ToInt32(field.Value));
+                    else if (name.EndsWith("_ail_class"))
+                        ailClasses.Add(name.Substring(0, name.Length - 10), Convert.ToInt32(field.Value));
+                    else if (name.EndsWith("_asl_cat"))
+                        aslCategories.Add(name.Substring(0, name.Length - 8), field.Value);
+                    else if (name.EndsWith("_ail_cat"))
+                        ailCategories.Add(name.Substring(0, name.Length - 8), field.Value);
                 }
+            }
 
             var fieldSets = new StringBuilder();
+            var newSets = new Dictionary<string, string>();
             foreach (var set in Sets)
             {
                 var asl = new SecurityLevel(aslClasses[set.Key], aslCategories[set.Key]);
@@ -67,16 +69,13 @@ namespace DBSecProject
                     throw new Exception("Access denied");
                 }
 
-                fieldSets.AppendFormat("{0} = {1},", set.Key, set.Value);
+                var value = set.Value;
+                if (set.Value.StartsWith("'") && set.Value.EndsWith("'"))
+                    value = value.Substring(1, value.Length - 2);
+                newSets.Add(set.Key, value);
             }
-            fieldSets.Remove(fieldSets.Length - 1, 1);
 
-            using (var updateCmd = new NpgsqlCommand())
-            {
-                updateCmd.Connection = connection;
-                updateCmd.CommandText = string.Format("UPDATE {0} SET {1} WHERE {2}", TableName, fieldSets.ToString(), Conditions);
-                updateCmd.ExecuteNonQuery();
-            }
+            encryptedDb.UpdateSet(TableName, newSets, Conditions);
         }
     }
 }
