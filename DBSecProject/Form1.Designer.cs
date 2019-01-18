@@ -55,7 +55,7 @@
             // 
             // btnChangeUser
             // 
-            this.btnChangeUser.Location = new System.Drawing.Point(191, 16);
+            this.btnChangeUser.Location = new System.Drawing.Point(349, 14);
             this.btnChangeUser.Name = "btnChangeUser";
             this.btnChangeUser.Size = new System.Drawing.Size(139, 30);
             this.btnChangeUser.TabIndex = 3;

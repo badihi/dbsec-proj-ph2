@@ -34,6 +34,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.separatedDbRadio = new System.Windows.Forms.RadioButton();
+            this.encryptedDbRadio = new System.Windows.Forms.RadioButton();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txUsername
@@ -71,7 +75,7 @@
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(67, 96);
+            this.btnLogin.Location = new System.Drawing.Point(63, 168);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(92, 28);
             this.btnLogin.TabIndex = 4;
@@ -81,7 +85,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(165, 96);
+            this.btnCancel.Location = new System.Drawing.Point(161, 168);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(93, 28);
             this.btnCancel.TabIndex = 5;
@@ -89,12 +93,47 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.button2_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.separatedDbRadio);
+            this.groupBox1.Controls.Add(this.encryptedDbRadio);
+            this.groupBox1.Location = new System.Drawing.Point(19, 87);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(297, 66);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Security mode";
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // separatedDbRadio
+            // 
+            this.separatedDbRadio.AutoSize = true;
+            this.separatedDbRadio.Location = new System.Drawing.Point(160, 30);
+            this.separatedDbRadio.Name = "separatedDbRadio";
+            this.separatedDbRadio.Size = new System.Drawing.Size(118, 21);
+            this.separatedDbRadio.TabIndex = 9;
+            this.separatedDbRadio.Text = "Separated DB";
+            this.separatedDbRadio.UseVisualStyleBackColor = true;
+            // 
+            // encryptedDbRadio
+            // 
+            this.encryptedDbRadio.AutoSize = true;
+            this.encryptedDbRadio.Checked = true;
+            this.encryptedDbRadio.Location = new System.Drawing.Point(24, 30);
+            this.encryptedDbRadio.Name = "encryptedDbRadio";
+            this.encryptedDbRadio.Size = new System.Drawing.Size(116, 21);
+            this.encryptedDbRadio.TabIndex = 8;
+            this.encryptedDbRadio.TabStop = true;
+            this.encryptedDbRadio.Text = "Encrypted DB";
+            this.encryptedDbRadio.UseVisualStyleBackColor = true;
+            // 
             // LoginForm
             // 
             this.AcceptButton = this.btnLogin;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(328, 138);
+            this.ClientSize = new System.Drawing.Size(328, 211);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.label2);
@@ -106,6 +145,8 @@
             this.MinimizeBox = false;
             this.Name = "LoginForm";
             this.Text = "Login";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -119,5 +160,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton separatedDbRadio;
+        private System.Windows.Forms.RadioButton encryptedDbRadio;
     }
 }

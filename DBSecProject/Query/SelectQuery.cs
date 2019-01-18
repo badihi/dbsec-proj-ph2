@@ -34,7 +34,7 @@ namespace DBSecProject
 
         public override DataTable _Execute(NpgsqlConnection connection, SecurityLevel RSL, SecurityLevel RIL, int subjectId)
         {
-            var encryptedDb = new EncryptedDB(connection);
+            var encryptedDb = SecureDB.GetSecureDB(connection);
             var rows = encryptedDb.Select(TableName, Fields, Conditions);
 
             var result = Read(rows, RSL, RIL);

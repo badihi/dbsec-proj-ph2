@@ -54,7 +54,7 @@ namespace DBSecProject
                 }
             } while (!Database.IsAuthenticated());
 
-            lblLoggedInAs.Text = "Logged in as: " + Database.Subject.Username;
+            lblLoggedInAs.Text = "Logged in as: " + Database.Subject.Username + " (" + (SecureDB.Type == SecureDBType.EncryptedDB ? "Encrypted DB mode" : "Separated DB mode") + ")";
         }
 
         private void label1_Click(object sender, EventArgs e)

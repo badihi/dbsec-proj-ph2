@@ -21,7 +21,7 @@ namespace DBSecProject
 
         public override DataTable _Execute(NpgsqlConnection connection, SecurityLevel RSL, SecurityLevel RIL, int subjectId)
         {
-            var encyptedDb = new EncryptedDB(connection);
+            var encyptedDb = SecureDB.GetSecureDB(connection);
             var rows = encyptedDb.Select("doctors", "subject_id = " + subjectId);
             try
             {

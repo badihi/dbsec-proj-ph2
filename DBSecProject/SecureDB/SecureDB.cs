@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -8,8 +9,22 @@ using System.Threading.Tasks;
 
 namespace DBSecProject
 {
+    public enum SecureDBType { EncryptedDB, SeparatedDB }
     public abstract class SecureDB
     {
+        public static SecureDBType Type { get; set; } = SecureDBType.EncryptedDB;
+        public static SecureDB GetSecureDB(NpgsqlConnection connection)
+        {
+            switch (Type)
+            {
+                case SecureDBType.EncryptedDB:
+                    return new EncryptedDB(connection);
+                default:
+                case SecureDBType.SeparatedDB:
+                    return new SeparatedDB(connection);
+            }
+        }
+
         public abstract void InsertInto(string tableName, Dictionary<string, string> fieldValues);
         public List<Dictionary<string, string>> Select(string tableName, string condition)
         {

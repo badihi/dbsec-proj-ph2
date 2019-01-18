@@ -34,7 +34,7 @@ namespace DBSecProject
 
         public override void _Execute(NpgsqlConnection connection, SecurityLevel WSL, SecurityLevel WIL)
         {
-            var encryptedDb = new EncryptedDB(connection);
+            var encryptedDb = SecureDB.GetSecureDB(connection);
             var selectedSecurity = encryptedDb.Select("schema_default_security", "table_name = '" + TableName + "'");
 
             var fieldValues = new Dictionary<string, string>();
