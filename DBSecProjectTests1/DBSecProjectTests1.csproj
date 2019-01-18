@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="DatabaseProvider.cs" />
     <Compile Include="DeleteQueryTests.cs" />
+    <Compile Include="SeparatedDBTests.cs" />
     <Compile Include="EncryptedDBTests.cs" />
     <Compile Include="InsertQueryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

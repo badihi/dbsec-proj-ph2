@@ -10,23 +10,31 @@ using Npgsql;
 namespace DBSecProject.Tests
 {
     [TestClass()]
-    public class EncryptedDBTests
+    public class SeparatedDBTests
     {
         [TestMethod()]
         public void InsertIntoTest()
         {
             var connection = DatabaseProvider.GetConnection();
-            var db = new EncryptedDB(connection);
+            var db = new SeparatedDB(connection);
 
-            foreach (var table in new string[] { "doctors", "nurses", "patients", "schema_default_security", "staff", "subjects" })
+            foreach (var dbName in new string[] { "hospital_ph2_p1", "hospital_ph2_p2" })
             {
-                using (var updateCmd = new NpgsqlCommand())
+                connection.ChangeDatabase(dbName);
+                foreach (var table in new string[] { "doctors", "nurses", "patients", "schema_default_security", "staff", "subjects" })
                 {
-                    updateCmd.Connection = connection;
-                    updateCmd.CommandText = string.Format("TRUNCATE TABLE {0}",
-                        table
-                    );
-                    updateCmd.ExecuteNonQuery();
+                    try
+                    {
+                        using (var updateCmd = new NpgsqlCommand())
+                        {
+                            updateCmd.Connection = connection;
+                            updateCmd.CommandText = string.Format("TRUNCATE TABLE {0}",
+                                table
+                            );
+                            updateCmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch { }
                 }
             }
 
@@ -83,119 +91,6 @@ namespace DBSecProject.Tests
                 { "salary_ail_cat", "f,d111" },
                 { "married_ail_class", "2" },
                 { "married_ail_cat", "p,d111" }
-            });
-
-            db.InsertInto("doctors", new Dictionary<string, string>
-            {
-                { "personnel_no", "873654" },
-                { "fname", "Folan" },
-                { "lname", "Folani" },
-                { "national_code", "2345678975" },
-                { "speciality", "" },
-                { "section", "" },
-                { "employment_date", "" },
-                { "age", "" },
-                { "salary", "100000" },
-                { "married", "" },
-                { "personnel_no_asl_class", "2" },
-                { "personnel_no_asl_cat", "d873654,p,f" },
-                { "fname_asl_class", "2" },
-                { "fname_asl_cat", "d873654,p,f" },
-                { "lname_asl_class", "2" },
-                { "lname_asl_cat", "d873654,p,f" },
-                { "national_code_asl_class", "2" },
-                { "national_code_asl_cat", "d873654,p,f" },
-                { "speciality_asl_class", "2" },
-                { "speciality_asl_cat", "d873654,p" },
-                { "section_asl_class", "2" },
-                { "section_asl_cat", "d873654,p" },
-                { "employment_date_asl_class", "2" },
-                { "employment_date_asl_cat", "d873654,p" },
-                { "age_asl_class", "2" },
-                { "age_asl_cat", "d873654,p" },
-                { "salary_asl_class", "2" },
-                { "salary_asl_cat", "d873654,f" },
-                { "married_asl_class", "2" },
-                { "married_asl_cat", "d873654,p" },
-                { "subject_id", "2" },
-                { "personnel_no_ail_class", "2" },
-                { "personnel_no_ail_cat", "d873654,p,f" },
-                { "fname_ail_class", "2" },
-                { "fname_ail_cat", "d873654,p,f" },
-                { "lname_ail_class", "2" },
-                { "lname_ail_cat", "d873654,p,f" },
-                { "national_code_ail_class", "2" },
-                { "national_code_ail_cat", "d873654,p,f" },
-                { "speciality_ail_class", "2" },
-                { "speciality_ail_cat", "d873654,p" },
-                { "section_ail_class", "2" },
-                { "section_ail_cat", "d873654,p" },
-                { "employment_date_ail_class", "2" },
-                { "employment_date_ail_cat", "d873654,p" },
-                { "age_ail_class", "2" },
-                { "age_ail_cat", "d873654,p" },
-                { "salary_ail_class", "2" },
-                { "salary_ail_cat", "d873654,f" },
-                { "married_ail_class", "2" },
-                { "married_ail_cat", "d873654,p" },
-
-
-            });
-
-            db.InsertInto("doctors", new Dictionary<string, string>
-            {
-                { "personnel_no", "8736534" },
-                { "fname", "Folan" },
-                { "lname", "Folani" },
-                { "national_code", "2345678975" },
-                { "speciality", "" },
-                { "section", "" },
-                { "employment_date", "" },
-                { "age", "" },
-                { "salary", "100000" },
-                { "married", "" },
-                { "personnel_no_asl_class", "2" },
-                { "personnel_no_asl_cat", "d8736534,p,f" },
-                { "fname_asl_class", "2" },
-                { "fname_asl_cat", "d8736534,p,f" },
-                { "lname_asl_class", "2" },
-                { "lname_asl_cat", "d8736534,p,f" },
-                { "national_code_asl_class", "2" },
-                { "national_code_asl_cat", "d8736534,p,f" },
-                { "speciality_asl_class", "2" },
-                { "speciality_asl_cat", "d8736534,p" },
-                { "section_asl_class", "2" },
-                { "section_asl_cat", "d8736534,p" },
-                { "employment_date_asl_class", "2" },
-                { "employment_date_asl_cat", "d8736534,p" },
-                { "age_asl_class", "2" },
-                { "age_asl_cat", "d8736534,p" },
-                { "salary_asl_class", "2" },
-                { "salary_asl_cat", "d8736534,f" },
-                { "married_asl_class", "2" },
-                { "married_asl_cat", "d8736534,p" },
-                { "subject_id", "2" },
-                { "personnel_no_ail_class", "2" },
-                { "personnel_no_ail_cat", "d8736534,p,f" },
-                { "fname_ail_class", "2" },
-                { "fname_ail_cat", "d8736534,p,f" },
-                { "lname_ail_class", "2" },
-                { "lname_ail_cat", "d8736534,p,f" },
-                { "national_code_ail_class", "2" },
-                { "national_code_ail_cat", "d8736534,p,f" },
-                { "speciality_ail_class", "2" },
-                { "speciality_ail_cat", "d8736534,p" },
-                { "section_ail_class", "2" },
-                { "section_ail_cat", "d8736534,p" },
-                { "employment_date_ail_class", "2" },
-                { "employment_date_ail_cat", "d8736534,p" },
-                { "age_ail_class", "2" },
-                { "age_ail_cat", "d8736534,p" },
-                { "salary_ail_class", "2" },
-                { "salary_ail_cat", "d8736534,f" },
-                { "married_ail_class", "2" },
-                { "married_ail_cat", "d8736534,p" },
-
             });
 
             db.InsertInto("subjects", new Dictionary<string, string>
@@ -671,7 +566,7 @@ namespace DBSecProject.Tests
         public void SelectTest()
         {
             var connection = DatabaseProvider.GetConnection();
-            var db = new EncryptedDB(connection);
+            var db = new SeparatedDB(connection);
 
             var result = db.Select("doctors", "national_code='1271877775'");
         }
@@ -680,11 +575,12 @@ namespace DBSecProject.Tests
         public void UpdateSetTest()
         {
             var connection = DatabaseProvider.GetConnection();
-            var db = new EncryptedDB(connection);
+            var db = new SeparatedDB(connection);
 
             db.UpdateSet("doctors", new Dictionary<string, string>
             {
-                { "age", "80" }
+                { "age", "80" },
+                //{ "national_code", "1271877775" }
             }, "national_code='1271877775'");
 
             var result = db.Select("doctors", new List<string>
@@ -699,9 +595,9 @@ namespace DBSecProject.Tests
         public void DeleteFromTest()
         {
             var connection = DatabaseProvider.GetConnection();
-            var db = new EncryptedDB(connection);
+            var db = new SeparatedDB(connection);
 
-            db.DeleteFrom("doctors", "national_code='2345678975'");
+            db.DeleteFrom("doctors", "national_code='1271877775'");
         }
     }
 }

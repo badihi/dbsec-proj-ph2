@@ -75,7 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EncryptedDB.cs" />
+    <Compile Include="SecureDB\EncryptedDB.cs" />
     <Compile Include="Query\DeleteQuery.cs" />
     <Compile Include="Query\InsertQuery.cs" />
     <Compile Include="Query\MyPrivacyQuery.cs" />
@@ -83,6 +83,8 @@
     <Compile Include="QueryResult.cs" />
     <Compile Include="Query\SelectQuery.cs" />
     <Compile Include="Query\UpdateQuery.cs" />
+    <Compile Include="SecureDB\SecureDB.cs" />
+    <Compile Include="SecureDB\SeparatedDB.cs" />
     <Compile Include="SecurityLevel.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Form1.cs">
